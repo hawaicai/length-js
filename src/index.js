@@ -1,46 +1,55 @@
+import { Unit } from './unit'
+
 export class Length {
   value
   unit
 
-  constructor(val, uint) {
-    this.value = val
-    this.unit = uint
+  constructor(value, unit) {
+    this.value = value
+    this.unit = unit
   }
 
-  getVal() {
+  getValue() {
     return this.value
   }
 
-  getUint() {
+  getUnit() {
     return this.unit
   }
 
-  parseTo(u) {
-    let len = this
-    if (this.unit === 'yard') {
-      if (u === 'f') {
-        len = new Length(this.value * 3, u)
-      } else if (u === 'inch') {
-        len = new Length(this.value * 36, u)
+  as(targetUnit) {
+    return new Length(this._valueIn(targetUnit), targetUnit)
+  }
+
+  _valueIn(unit) {
+    if (this.unit === Unit.YARD) {
+      if (unit === Unit.FOOT) {
+        return this.value * 3
+      }
+
+      if (unit === Unit.INCH) {
+        return this.value * 36
       }
     }
 
-    if (this.unit === 'inch') {
-      if (u === 'yard') {
-        len = new Length(this.value / 36, u)
-      } else if (u === 'f') {
-        len = new Length(this.value / 12, u)
+    if (this.unit === Unit.INCH) {
+      if (unit === Unit.YARD) {
+        return this.value / 36
+      }
+      if (unit === Unit.FOOT) {
+        return this.value / 12
       }
     }
 
-    if (this.unit === 'f') {
-      if (u === 'yard') {
-        len = new Length(this.value / 3, u)
-      } else if (u === 'inch') {
-        len = new Length(this.value * 12, u)
+    if (this.unit === Unit.FOOT) {
+      if (unit === Unit.YARD) {
+        return this.value / 3
+      }
+      if (unit === Unit.INCH) {
+        return this.value * 12
       }
     }
 
-    return len
+    return this.value
   }
 }
